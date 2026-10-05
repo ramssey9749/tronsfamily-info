@@ -13,37 +13,38 @@ body {
     background-size: auto;
     background-color: #000000;
 }
-.main_tag {
-    display: flex;
-    gap: 5px;
-    background-color: white;
-    color: black;
-    width: 100px;
-    height: 50px;
-    padding: 0px 0px;
-    text-align: top-right;
+
+.controls {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 100;
+    background: rgba(255, 255, 255, 0.95);
+    padding: 12px 24px;
+    border-radius: 30px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+    //display: flex;
+    display: none;
+    align-items: center;
+    gap: 15px;
+    backdrop-filter: blur(4px);
 }
-.links_tag {
-    display: flex;
-    gap: 5px;
-    background-color: white;
-    color: black;
-    width: 100px;
-    height: 50px;
-    padding: 0px 0px;
-    text-align: top-right;
+
+/* Updated inner-content scaling rules */
+.inner-content {
+    transform-origin: top center;
+    margin-top: 0px; 
+    margin-left: auto;
+    margin-right: auto;
+    width: fit-content;
 }
-.info_tag {
-    display: flex;
-    gap: 5px;
-    background-color: white;
-    color: black;
-    width: 100px;
-    height: 50px;
-    padding: 0px 0px;
-    text-align: top-right;
-}
-.other_tag {
+
+
+.main_tag,
+.links_tag,
+.info_tag,
+.apps_tag {
     display: flex;
     gap: 5px;
     background-color: white;
@@ -71,6 +72,18 @@ body {
 </head>
 <body>
 
+
+    <!-- 1. Centered UI Control Slider Layer -->
+    <div class="controls">
+        <label for="scaleSlider" style="color: #1e293b;"><strong>Viewport Zoom:</strong></label>
+        <input type="range" id="scaleSlider" min="0.2" max="2.0" step="0.02" value="2.0">
+        <span id="scaleValue" style="color: #1e293b; font-variant-numeric: tabular-nums; font-weight: bold;">1.00x</span>
+    </div>
+
+    <!-- The layout that stays locked center mass and scales uniformly outward -->
+    <div class="inner-content" id="scalableCanvas">
+
+
     <div class="headerr">
       <a href="https://ramssey9749.github.io/tronsfamily-main-page/" style="color: white;"><div class="main_tag">
         <img src="mainicon.png" alt="mainicon.png" class="hb">
@@ -87,7 +100,7 @@ body {
         <p>info</p>
       </div></a>
 
-      <a href="https://ramssey9749.github.io/tronsfamily-apps/" style="color: white;"><div class="other_tag">
+      <a href="https://ramssey9749.github.io/tronsfamily-apps/" style="color: white;"><div class="apps_tag">
         <img src="appsicon.png" alt="appsicon.png" class="hb">
         <p>apps</p>
       </div></a>
@@ -179,7 +192,30 @@ body {
 
 
 <div class="main_text"><p></p></div>
+
+</div>
     <script>
+        // Scaling Logic Interface
+        const slider = document.getElementById('scaleSlider');
+        const scaleLabel = document.getElementById('scaleValue');
+        const canvas = document.getElementById('scalableCanvas');
+
+        function applyCenterScale(scaleFactor) {
+            // Update textual layout indicator tracking exact float precision
+            scaleLabel.textContent = `${parseFloat(scaleFactor).toFixed(2)}x`;
+
+            // Transform layout visually outwards from absolute center coordinate
+            //canvas.style.transform = `scaleX(${scaleFactor})`;
+            //canvas.style.transform = `scale(${scaleFactor})`;
+            canvas.style.zoom = scaleFactor;
+        }
+
+        slider.addEventListener('input', (e) => {
+            applyCenterScale(e.target.value);
+        });
+
+        // Initialize at normal scale state
+        applyCenterScale(2.0);
     </script>
 
 </body>
